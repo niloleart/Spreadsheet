@@ -1,4 +1,10 @@
 package cell.content.formula
 
-interface Operand : FormulaComponent {
+import cell.content.formula.computation.Visitor
+
+abstract class Operand : Component {
+    override fun acceptVisitor(visitor: Visitor) {
+        visitor.visit(this)
+    }
+
 }

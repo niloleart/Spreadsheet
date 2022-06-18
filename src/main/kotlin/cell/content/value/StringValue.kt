@@ -8,4 +8,8 @@ class StringValue(private val value: String) : Value{
     override fun getAsString(): String {
         return value
     }
+
+    fun getAsStringWithoutFirstChar(): String {
+        return value.drop(1)
+    }
 }

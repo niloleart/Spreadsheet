@@ -1,15 +1,14 @@
 package userinterface
 
+import cell.Cell
+import cell.Coordinate
 import exception.BadEditCellInputException
 import exception.InvalidCellContentException
 import exception.SpreadsheetNotInitializedException
 import main
 import spreadsheet.SpreadsheetController
 import userinterface.utils.*
-import java.io.File
-import java.io.FileInputStream
-import java.io.IOException
-import java.util.Scanner
+import java.util.*
 import kotlin.system.exitProcess
 
 class UserInterface : TextBasedUserInterface {
@@ -123,8 +122,23 @@ class UserInterface : TextBasedUserInterface {
             if (this.isSpreadsheetInitialized() && this.spreadsheet.cells.isNotEmpty()) {
                 println("$COLOR_BLUE**************************")
                 println(SPREADSHEET_PRESENT)
-                for ((key, value) in this.spreadsheet.cells) {
-                    println(key+","+ value.value.getAsString())
+
+                for (j in 1..spreadsheet.maxCol) {
+                    print("|" + Coordinate().toAlphabetic(j - 1).toString() + "|\t\t")
+                }
+                println()
+                for (i in 1..spreadsheet.maxRow) {
+                    print("|$i|\t")
+                    for (j in 1 until spreadsheet.maxCol + 1) {
+                        val optionalCell: Optional<Cell> = spreadsheet.getCell(Coordinate(i, j))
+                        if (optionalCell.isPresent) {
+                            print(optionalCell.get().content.getValue())
+                        } else {
+                            print("\t")
+                        }
+                        print(";\t")
+                    }
+                    println("")
                 }
                 println("**************************$COLOR_ORIGINAL\n")
             }

@@ -1,9 +1,10 @@
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.formula.expression.IFormulaExpressionFactory
 import userinterface.UserInterface
 import userinterface.utils.COLOR_GREEN
 import userinterface.utils.COLOR_ORIGINAL
 import userinterface.utils.E_SOMETHING_WRONG
 import java.io.File
-import java.util.Scanner
+import java.util.*
 
 var userInterface: UserInterface = UserInterface()
 var RF_MODE = false
@@ -38,7 +39,6 @@ private fun processRFInputs(args: Array<String>?) {
         } else {
             arguments = null
             RF_MODE = false
-            main()
         }
     }
 }

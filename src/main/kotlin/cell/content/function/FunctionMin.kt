@@ -1,4 +1,10 @@
 package cell.content.function
 
-class FunctionMin(arguments: List<Argument>) : Function(arguments) {
+import cell.content.value.NumberValue
+import spreadsheet.Spreadsheet
+
+class FunctionMin() : Function() {
+    override fun compute(spreadsheet: Spreadsheet?): NumberValue {
+        return NumberValue()
+    }
 }

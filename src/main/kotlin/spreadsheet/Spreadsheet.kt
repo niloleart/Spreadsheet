@@ -2,10 +2,23 @@ package spreadsheet
 
 import cell.Cell
 import cell.Coordinate
-import cell.content.Content
+import java.util.*
 
 class Spreadsheet(
-    var cells: MutableMap<String, Content>
+    var cells: MutableMap<Coordinate, Cell>,
+    var maxRow: Int = 0,
+    var maxCol: Int = 0
 ) : SpreadsheetInterface {
 
+    fun getCell(coordinate: Coordinate): Optional<Cell> {
+        return Optional.ofNullable(cells[coordinate])
+    }
+
+    fun addCell(cell: Cell) {
+        cells[cell.coordinate] = cell
+        val row = cell.coordinate.row
+        val col = cell.coordinate.column
+        maxRow = Integer.max(row, maxRow)
+        maxCol = Integer.max(col, maxCol)
+    }
 }

@@ -1,4 +1,10 @@
 package cell.content.function
 
-class FunctionMax(arguments: List<Argument>): Function(arguments) {
+import cell.content.value.NumberValue
+import spreadsheet.Spreadsheet
+
+class FunctionMax(): Function() {
+    override fun compute(spreadsheet: Spreadsheet?): NumberValue {
+        return NumberValue()
+    }
 }
