@@ -119,4 +119,11 @@ class FormulaProcessor(var spreadsheetController: SpreadsheetController) {
 
     }
 
+    fun recomputeFormulaValue(formula: FormulaContent): NumberValue {
+        this.formula = formula
+        expression = formula.formulaExpression
+        evaluatePostfix()
+        return numberValue
+    }
+
 }

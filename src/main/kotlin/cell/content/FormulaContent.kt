@@ -11,7 +11,7 @@ class FormulaContent(
     ) : Content {
     private lateinit var numberValue: NumberValue
     lateinit var formulaProcessor: FormulaProcessor
-    private lateinit var formulaExpression: List<Component>
+    lateinit var formulaExpression: List<Component>
 
     override fun getValue(): Value {
         return numberValue
@@ -22,10 +22,9 @@ class FormulaContent(
         formulaExpression = formulaProcessor.expression
     }
 
-    //TODO
     fun computeValue(recompute: Boolean) {
         if (recompute) {
-            //stringValue = formulaProcessor.recomputeFormulaValue(this)
+            numberValue = formulaProcessor.recomputeFormulaValue(this)
             formulaExpression = formulaProcessor.expression
         } else {
             computeValue()

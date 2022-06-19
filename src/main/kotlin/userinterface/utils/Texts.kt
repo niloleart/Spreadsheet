@@ -42,3 +42,4 @@ const val E_BAD_CELL_INPUT = "Input to edit cell not correct.\nEnter: E <cell co
 const val E_BAD_CELL_COORDINATES = "It seems that you are not entering the coordinates properly"
 const val E_BAD_CELL_CONTENT = "Invalid content for cell. It can be numerical, text or a formula."
 const val E_SOMETHING_WRONG = "Something went wrong."
+const val E_CIRCULAR_DEPENDENCY = "Found circular dependency: "

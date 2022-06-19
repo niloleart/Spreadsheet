@@ -99,6 +99,8 @@ class UserInterface : TextBasedUserInterface {
             exception.printError()
         } catch (exception: InvalidCellContentException) {
             exception.printError()
+        } catch (e: Exception) {
+            e.printStackTrace()
         }
     }
 

@@ -3,22 +3,20 @@ package spreadsheet
 import cell.Cell
 import cell.Coordinate
 import cell.content.*
+import cell.content.formula.Component
 import cell.content.formula.FormulaProcessor
 import cell.content.formula.computation.PostfixEvaluator
+import cell.content.function.*
 import cell.content.function.Function
-import cell.content.function.FunctionAdd
-import cell.content.function.FunctionMax
-import cell.content.function.FunctionMean
-import cell.content.function.FunctionMin
+import cell.content.value.NumberValue
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.formula.expression.FormulaException
-import exception.BadEditCellInputException
-import exception.SpreadsheetException
-import exception.SpreadsheetNotInitializedException
+import exception.*
 import spreadsheet.utils.loader.CSVLoader
 import spreadsheet.utils.loader.Loader
 import spreadsheet.utils.saver.CSVSaver
 import spreadsheet.utils.saver.Saver
 import userinterface.utils.E_BAD_CELL_COORDINATES
+import java.beans.PropertyChangeListener
 import java.util.*
 
 class SpreadsheetController {
@@ -108,11 +106,11 @@ class SpreadsheetController {
             } catch (e: FormulaException) {
                 content = createContent("#ERROR")
             }
-            //if (hasDependantCells(cell) && content.getValue() !is NumValue) {
-            //    throw BadCellContentException("Updating cell with non numeric value")
-           // }
-            cell.content = content
-            //this.updateDependantCells(cell)
+            if (hasDependantCells(cell) && content.getValue() !is NumberValue) {
+               throw BadCellContentException("Updating cell with non numeric value")
+            }
+            cell.setNewContent(content)
+            updateDependantCells(cell)
             spreadsheet.addCell(cell)
     }
 
@@ -151,5 +149,51 @@ class SpreadsheetController {
         }
     }
 
+    private fun updateDependantCells(cell: Cell) {
+        if (cell.content !is FormulaContent) {
+            return
+        }
+        try {
+            val formulaExpression: List<Component> = (cell.content as FormulaContent).formulaExpression
+            for (component in formulaExpression) {
+                if (component is Coordinate) {
+                    val optParentCell = spreadsheet.getCell(component)
+                    val parentCell = optParentCell.orElseGet { createCell(component) }
+                    checkCircularDependency(parentCell, cell)
+                    parentCell.addPropertyChangeListener(cell)
+                } else if (component is Function) {
+                    for (arguments in component.getArguments()!!) {
+                        if (arguments is Coordinate) {
+                            val optParentCell = spreadsheet.getCell(arguments)
+                            val parentCell =
+                                optParentCell.orElseGet { createCell(arguments) }
+                            checkCircularDependency(parentCell, cell)
+                            parentCell.addPropertyChangeListener(cell)
+                        }
+                    }
+                }
+            }
+        } catch (e : CircularDependencyException) {
+            e.printError()
+        }
+
+    }
+
+    @Throws(CircularDependencyException::class)
+    private fun checkCircularDependency(parentCell: Cell, childCell: Cell) {
+        val dependantCells: List<PropertyChangeListener> = childCell.getDependantCells()
+        for (pcl in dependantCells) {
+            val cell = pcl as Cell
+            if (cell == parentCell) {
+                throw CircularDependencyException(parentCell.coordinate, childCell.coordinate)
+            } else {
+                checkCircularDependency(cell, childCell)
+            }
+        }
+    }
+
+    private fun hasDependantCells(cell: Cell): Boolean {
+        return cell.getDependantCells().isNotEmpty()
+    }
 
 }
