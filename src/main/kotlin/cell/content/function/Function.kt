@@ -44,7 +44,7 @@ abstract class Function : Operand(), Argument {
                 numValue = try {
                     cell.content.getValue() as NumberValue
                 } catch (e: ClassCastException) {
-                    throw java.lang.Exception("Tried to cast non NumValue to NumValue")
+                    throw java.lang.Exception("Unable to cast non NumberValue to NumberValue")
                 }
             }
         } else {
