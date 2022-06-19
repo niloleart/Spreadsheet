@@ -5,6 +5,11 @@ import cell.Coordinate
 import cell.content.*
 import cell.content.formula.FormulaProcessor
 import cell.content.formula.computation.PostfixEvaluator
+import cell.content.function.Function
+import cell.content.function.FunctionAdd
+import cell.content.function.FunctionMax
+import cell.content.function.FunctionMean
+import cell.content.function.FunctionMin
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.formula.expression.FormulaException
 import exception.BadEditCellInputException
 import exception.SpreadsheetException
@@ -133,6 +138,16 @@ class SpreadsheetController {
                TextContent(contentString)
            }
 
+        }
+    }
+
+    fun createFunction(formulaType: String): Function? {
+        return when(formulaType) {
+            "SUMA" -> FunctionAdd()
+            "MIN" -> FunctionMin()
+            "PROMEDIO" -> FunctionMean()
+            "MAX" -> FunctionMax()
+            else -> null
         }
     }
 

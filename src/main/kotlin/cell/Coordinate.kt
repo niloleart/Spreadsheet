@@ -1,15 +1,19 @@
 package cell
 
 import cell.content.formula.Operand
-import cell.content.formula.computation.Visitor
 import cell.content.function.Argument
+import java.util.Objects
 
-class Coordinate(
-
-) : Operand(), Argument {
+class Coordinate() : Operand(), Argument {
     var row: Int = 0
     var column: Int = 0
     private lateinit var coordinates: String
+
+    constructor(row: Int, column: Int) : this() {
+        this.row = row
+        this.column = column
+        this.coordinates = toAlphabetic(column-1) + row
+    }
 
     constructor(coordinates: String): this() {
         this.coordinates = coordinates
@@ -24,11 +28,18 @@ class Coordinate(
         }
     }
 
-    constructor(row: Int, column: Int) : this() {
-        this.row = row
-        this.column = column
-        this.coordinates = toAlphabetic(column-1) + row
+    override fun toString(): String {
+        return coordinates
     }
+
+    override fun hashCode() = Objects.hash(row, column)
+
+    override fun equals(other: Any?) =  if (other !is Coordinate) {
+        false
+    } else {
+        other.row == row && other.column == column
+    }
+
 
     fun toAlphabetic(i: Int): String {
         val quot = i / 26

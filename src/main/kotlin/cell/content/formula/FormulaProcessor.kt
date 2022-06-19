@@ -1,11 +1,12 @@
 package cell.content.formula
 
-import cell.Cell
+import cell.CellRange
 import cell.Coordinate
 import cell.content.FormulaContent
 import cell.content.formula.computation.MyTokenizer
-import cell.content.formula.computation.PostfixEvaluator
 import cell.content.formula.evaluators.ExpressionEvaluator
+import cell.content.function.Argument
+import cell.content.function.Function
 import cell.content.value.NumberValue
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.formula.expression.IFormulaExpressionFactory
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.formula.tokens.IToken
@@ -15,7 +16,7 @@ import spreadsheet.SpreadsheetController
 
 class FormulaProcessor(var spreadsheetController: SpreadsheetController) {
     private lateinit var formula: FormulaContent
-    private  var tokens: List<IToken>? = null
+    private var tokens: List<IToken>? = null
     var expression: List<Component> = mutableListOf()
     private lateinit var numberValue: NumberValue
 
@@ -32,19 +33,20 @@ class FormulaProcessor(var spreadsheetController: SpreadsheetController) {
         //3. Generate Postifx
         generateExpression()
 
-        //TODO 4. Evaluate postfix(postfix)
+        //4. Evaluate postfix(postfix)
         evaluatePostfix()
 
         return numberValue
-        //return FormulaContent(stringValue, operators, operands, NumberValue())
     }
 
+    private fun tokenizeFormula() {
+        val tokenizer = MyTokenizer()
+        tokens = tokenizer.generateTokens(formula.getContentString())
+    }
 
+    private fun parseFormula() {
 
-   private fun tokenizeFormula() {
-       val tokenizer = MyTokenizer()
-       tokens = tokenizer.generateTokens(formula.getContentString())
-   }
+    }
 
     private fun generateExpression() {
         val factory = IFormulaExpressionFactory.getInstance("DEFAULT")
@@ -52,28 +54,69 @@ class FormulaProcessor(var spreadsheetController: SpreadsheetController) {
         gen.generateFromString(formula.getContentString())
 
         val componentList = mutableListOf<Component>()
+        var iterator = gen.result.iterator()
+        iterator.forEach{ token ->
+            when (token.type) {
+                TokenType.NUM -> componentList.add(NumberValue(token.text.toDouble()))
+                TokenType.OPERATOR -> componentList.add(Operator(token.text))
+                TokenType.CELL -> componentList.add(Coordinate(token.text))
+                TokenType.FUNCTION -> {
+                    val function: Function? = spreadsheetController.createFunction(token.text)
+                    if (function != null) {
+                        componentList.add(function)
+                        iterator = processFunction(function, iterator)
+                    }
 
-        for (c in gen.result) {
-           when(c.type) {
-               TokenType.NUM -> componentList.add(NumberValue(c.text.toDouble()))
-               TokenType.OPERATOR -> {
-                   componentList.add(Operator(c.text))
+                }
 
-               }
-               TokenType.CELL -> componentList.add(Coordinate(c.text))
-
-           }
+            }
         }
         expression = componentList.toList()
     }
 
-    private fun parseFormula() {
-
-    }
 
     private fun evaluatePostfix() {
         val evaluator: ExpressionEvaluator = spreadsheetController.createExpressionEvaluator()
         numberValue = evaluator.evaluateExpression(expression)
+    }
+
+    private fun processFunction(function: Function, it: Iterator<IToken>): MutableIterator<IToken> {
+        var previousToken =  Token.getInstance(null,"")
+        var iterator: MutableIterator<IToken> = it as MutableIterator<IToken>
+        var argument: Argument? = null
+        while (iterator.hasNext()) {
+            var currentToken = iterator.next()
+            when(currentToken.type) {
+                TokenType.CLOSINGB -> {
+                    iterator.remove()
+                    break
+                }
+                TokenType.RANGE -> argument = CellRange(currentToken.text)
+                TokenType.FUNCTION -> {
+                    val subFunction = spreadsheetController.createFunction(currentToken.text)
+                    if (subFunction != null) {
+                        iterator = processFunction(subFunction, iterator)
+                        function.addArgument(subFunction)
+                        continue
+                    }
+                }
+                TokenType.CELL -> argument = Coordinate(currentToken.text)
+                TokenType.NUM -> {
+                    var sign = 1
+                    if (previousToken.text.equals("-")) {
+                        sign = -1
+                    }
+                    argument = NumberValue(sign*currentToken.text.toDouble())
+                } else -> {
+                    iterator.remove()
+                    previousToken = currentToken as Token
+                    continue
+                }
+            }
+        }
+        argument?.let { arg -> function.addArgument(arg) }
+        return iterator
+
     }
 
 }

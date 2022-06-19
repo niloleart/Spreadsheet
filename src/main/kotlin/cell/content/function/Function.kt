@@ -9,9 +9,7 @@ import cell.content.value.Value
 import spreadsheet.Spreadsheet
 import java.util.*
 
-abstract class Function(
-
-) : Operand(), Argument {
+abstract class Function : Operand(), Argument {
 
     var value: NumberValue? = null
     private var arguments: MutableList<Argument> = ArrayList()
@@ -21,10 +19,9 @@ abstract class Function(
     }
 
     open fun addArgument(argument: Argument) {
-        // Here we do a very useful trick
         if (argument is CellRange) {
-           // val coordinates: List<Coordinate> = (argument as CellRange).getAllCoordinates()
-            //arguments.addAll(coordinates)
+           val coordinates: List<Coordinate> = argument.getRangeCoordinates()
+            arguments.addAll(coordinates)
         } else {
             arguments.add(argument)
         }
@@ -34,9 +31,9 @@ abstract class Function(
         return arguments
     }
 
-    abstract fun compute(spreadsheet: Spreadsheet?): NumberValue
+    abstract fun compute(spreadsheet: Spreadsheet): NumberValue
 
-    protected open fun getArgumentValue(spreadsheet: Spreadsheet, argument: Argument): NumberValue? {
+    protected open fun getArgumentValue(spreadsheet: Spreadsheet, argument: Argument): NumberValue {
         var numValue = NumberValue()
         if (argument is Function) {
             numValue = argument.compute(spreadsheet)

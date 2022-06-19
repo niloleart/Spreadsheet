@@ -122,17 +122,17 @@ class UserInterface : TextBasedUserInterface {
             if (this.isSpreadsheetInitialized() && this.spreadsheet.cells.isNotEmpty()) {
                 println("$COLOR_BLUE**************************")
                 println(SPREADSHEET_PRESENT)
-
+                print("\t")
                 for (j in 1..spreadsheet.maxCol) {
-                    print("|" + Coordinate().toAlphabetic(j - 1).toString() + "|\t\t")
+                    print("[" + Coordinate().toAlphabetic(j - 1) + "]\t\t")
                 }
                 println()
                 for (i in 1..spreadsheet.maxRow) {
-                    print("|$i|\t")
+                    print("[$i]\t")
                     for (j in 1 until spreadsheet.maxCol + 1) {
                         val optionalCell: Optional<Cell> = spreadsheet.getCell(Coordinate(i, j))
                         if (optionalCell.isPresent) {
-                            print(optionalCell.get().content.getValue())
+                            print(optionalCell.get().content.getValue().getAsString())
                         } else {
                             print("\t")
                         }
