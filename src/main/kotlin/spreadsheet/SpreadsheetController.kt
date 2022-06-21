@@ -48,9 +48,8 @@ class SpreadsheetController {
     }
 
     fun loadSpreadsheet(path: String) {
-        csvLoader = CSVLoader()
-        //TODO
-        //spreadsheet = csvLoader.load(path)
+        csvLoader = CSVLoader(this, createFormulaProcessor())
+        spreadsheet = csvLoader.load(path)
     }
 
     fun editCell(userInput: List<String>) {
@@ -92,7 +91,7 @@ class SpreadsheetController {
         }
     }
 
-    private fun setCellContent(cellCoordinate: String, contentStr: String) {
+    fun setCellContent(cellCoordinate: String, contentStr: String) {
 
             val coordinate = Coordinate(cellCoordinate)
             val cellOptional = spreadsheet.getCell(coordinate)
@@ -122,11 +121,11 @@ class SpreadsheetController {
         return PostfixEvaluator(spreadsheet)
     }
 
-    private fun createCell(coordinate: Coordinate): Cell {
+    fun createCell(coordinate: Coordinate): Cell {
         return Cell(coordinate)
     }
 
-    private fun createContent(contentString: String): Content {
+    fun createContent(contentString: String): Content {
         with(contentString) {
          return  if (this.isNumeric()) {
                NumericalContent(contentString)
@@ -141,8 +140,10 @@ class SpreadsheetController {
 
     fun createFunction(formulaType: String): Function? {
         return when(formulaType) {
+            "SUM" -> FunctionAdd()
             "SUMA" -> FunctionAdd()
             "MIN" -> FunctionMin()
+            "MEAN" -> FunctionMean()
             "PROMEDIO" -> FunctionMean()
             "MAX" -> FunctionMax()
             else -> null

@@ -14,7 +14,6 @@ import kotlin.system.exitProcess
 class UserInterface : TextBasedUserInterface {
 
     var firstEntry = true
-    var READING_FILE_MODE = false
     private val optionList = listOf(OPTION_1, OPTION_2, OPTION_3, OPTION_4, OPTION_5, OPTION_6)
     private val textList = listOf(TEXT_1, TEXT_2, TEXT_3, TEXT_4, TEXT_5, TEXT_6)
     private lateinit var userInput: List<String>
@@ -39,7 +38,6 @@ class UserInterface : TextBasedUserInterface {
         } else {
             processError()
         }
-       // main()
     }
 
     private fun processError() {
@@ -65,10 +63,7 @@ class UserInterface : TextBasedUserInterface {
                 loadSpreadsheet(userInput[1])
             }
             OPTION_5 -> {
-                //TODO
-                val path = "../../Desktop/prova1.csv"
-                //saveSpreadSheet(userInput[1])
-                saveSpreadSheet(path)
+                saveSpreadSheet(userInput[1])
             }
             OPTION_6 -> {
                 exitProcess(0)

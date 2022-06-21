@@ -9,8 +9,11 @@ import cell.content.function.Argument
 import cell.content.function.Function
 import cell.content.value.NumberValue
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.formula.expression.IFormulaExpressionFactory
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.formula.syntax.ISyntaxChecker
+import edu.upc.etsetb.arqsoft.spreadsheet.entities.formula.syntax.SyntaxException
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.formula.tokens.IToken
 import edu.upc.etsetb.arqsoft.spreadsheet.entities.formula.tokens.TokenType
+import edu.upc.etsetb.arqsoft.spreadsheet.usecases.formula.syntax.SyntaxChecker
 import edu.upc.etsetb.arqsoft.spreadsheet.usecases.formula.tokens.Token
 import spreadsheet.SpreadsheetController
 
@@ -45,7 +48,12 @@ class FormulaProcessor(var spreadsheetController: SpreadsheetController) {
     }
 
     private fun parseFormula() {
-
+        val syntaxChecker = SyntaxChecker.getInstance(IFormulaExpressionFactory.getInstance("DEFAULT"))
+        try {
+            syntaxChecker.check(tokens.toString())
+        } catch (e: SyntaxException) {
+            println(e.message)
+        }
     }
 
     private fun generateExpression() {
@@ -66,9 +74,7 @@ class FormulaProcessor(var spreadsheetController: SpreadsheetController) {
                         componentList.add(function)
                         iterator = processFunction(function, iterator)
                     }
-
                 }
-
             }
         }
         expression = componentList.toList()
