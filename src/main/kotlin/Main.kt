@@ -1,4 +1,4 @@
-import edu.upc.etsetb.arqsoft.spreadsheet.entities.formula.expression.IFormulaExpressionFactory
+
 import userinterface.UserInterface
 import userinterface.utils.COLOR_GREEN
 import userinterface.utils.COLOR_ORIGINAL
@@ -42,7 +42,6 @@ private fun processRFInputs(args: Array<String>?) {
         }
     }
 }
-
 
 private fun shouldInitScannerForRF(args: Array<String>?) {
     if (!RF_MODE) {

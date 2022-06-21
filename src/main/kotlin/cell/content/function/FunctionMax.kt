@@ -2,9 +2,9 @@ package cell.content.function
 
 import cell.content.value.NumberValue
 import spreadsheet.Spreadsheet
-import kotlin.math.max
 
 class FunctionMax: Function() {
+
     override fun compute(spreadsheet: Spreadsheet): NumberValue {
         var maxValue: NumberValue? = null
 

@@ -1,7 +1,5 @@
 package userinterface
 
-import cell.Coordinate
-
 interface TextBasedUserInterface {
     fun readCommandFromFile(path: String)
     fun createSpreadsheet()

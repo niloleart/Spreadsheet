@@ -10,11 +10,11 @@ class Spreadsheet(
     var maxCol: Int = 0
 ) : SpreadsheetInterface {
 
-    fun getCell(coordinate: Coordinate): Optional<Cell> {
+    override fun getCell(coordinate: Coordinate): Optional<Cell> {
         return Optional.ofNullable(cells[coordinate])
     }
 
-    fun addCell(cell: Cell) {
+    override fun addCell(cell: Cell) {
         cells[cell.coordinate] = cell
         val row = cell.coordinate.row
         val col = cell.coordinate.column

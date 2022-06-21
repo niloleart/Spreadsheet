@@ -13,7 +13,7 @@ class Cell(
     lateinit var content: Content
     var propertyChangeSupport: PropertyChangeSupport = PropertyChangeSupport(this)
 
-    fun removePropertyChangeListener(pcl: PropertyChangeListener?) {
+    private fun removePropertyChangeListener(pcl: PropertyChangeListener?) {
         propertyChangeSupport.removePropertyChangeListener(pcl)
     }
 

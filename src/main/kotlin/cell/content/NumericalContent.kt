@@ -3,7 +3,7 @@ package cell.content
 import cell.content.value.NumberValue
 import cell.content.value.Value
 
-class NumericalContent(val contentStr: String): Content {
+class NumericalContent(private val contentStr: String): Content {
     lateinit var numberValue: NumberValue
 
     override fun getValue(): Value {

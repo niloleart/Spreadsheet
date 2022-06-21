@@ -28,13 +28,11 @@ const val TEXT_6 ="(EXIT) Exit the program. Remember to save your spreadsheet fi
 const val EXC_INVALID_INPUT = "Could not understand you! Enter a valid option, please :D\n\n"
 const val TEXT_WELCOME = "Hello user, select an option and input its parameters!\n"
 
-
 //OK MESSAGES
 const val SPREADSHEET_CREATED = "Spreadsheet has been created!"
 const val SPREADSHEET_LOADED = "Spreadsheet has been loaded!"
 const val SPREADSHEET_SAVED = "Spreadsheet has been saved!"
 const val SPREADSHEET_PRESENT = "Presenting spreadsheet:"
-
 
 //ERRORS
 const val E_NOT_INITIALIZED = "Spreadsheet has not been initialized. Create or load a spreadsheet first"

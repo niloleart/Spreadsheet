@@ -5,6 +5,7 @@ import cell.Coordinate
 import cell.content.*
 import cell.content.formula.Component
 import cell.content.formula.FormulaProcessor
+import cell.content.formula.computation.ExpressionGenerator
 import cell.content.formula.computation.PostfixEvaluator
 import cell.content.function.*
 import cell.content.function.Function
@@ -17,7 +18,6 @@ import spreadsheet.utils.saver.CSVSaver
 import spreadsheet.utils.saver.Saver
 import userinterface.utils.E_BAD_CELL_COORDINATES
 import java.beans.PropertyChangeListener
-import java.util.*
 
 class SpreadsheetController {
 
@@ -113,7 +113,7 @@ class SpreadsheetController {
             spreadsheet.addCell(cell)
     }
 
-    fun createFormulaProcessor(): FormulaProcessor {
+    private fun createFormulaProcessor(): FormulaProcessor {
         return FormulaProcessor(this)
     }
 
@@ -121,11 +121,15 @@ class SpreadsheetController {
         return PostfixEvaluator(spreadsheet)
     }
 
-    fun createCell(coordinate: Coordinate): Cell {
+    fun createExpressionGenerator(): ExpressionGenerator {
+        return ExpressionGenerator(this)
+    }
+
+    private fun createCell(coordinate: Coordinate): Cell {
         return Cell(coordinate)
     }
 
-    fun createContent(contentString: String): Content {
+    private fun createContent(contentString: String): Content {
         with(contentString) {
          return  if (this.isNumeric()) {
                NumericalContent(contentString)
@@ -177,7 +181,6 @@ class SpreadsheetController {
         } catch (e : CircularDependencyException) {
             e.printError()
         }
-
     }
 
     @Throws(CircularDependencyException::class)

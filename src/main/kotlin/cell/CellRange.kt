@@ -3,10 +3,10 @@ package cell
 import cell.content.function.Argument
 
 class CellRange(
-    var cellRange: String
+    cellRange: String
 ) : Argument{
-    private lateinit var startCell: Coordinate
-    private lateinit var endCell: Coordinate
+    private var startCell: Coordinate
+    private var endCell: Coordinate
 
     init {
         val rangeList = cellRange.split(":")

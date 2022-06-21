@@ -21,10 +21,8 @@ class Coordinate() : Operand(), Argument {
         row = parsedCoordinates[1].toInt()
         val column = parsedCoordinates[0]
         this.column = 0
-        var i =0
-        for (letter: Char in column.uppercase().toCharArray()) {
+        for ((i, letter: Char) in column.uppercase().toCharArray().withIndex()) {
             this.column += (letter - 'A') + 25 * i + 1
-            i++
         }
     }
 

@@ -3,7 +3,6 @@ package cell.content
 import cell.content.formula.Component
 import cell.content.formula.FormulaProcessor
 import cell.content.value.NumberValue
-import cell.content.value.StringValue
 import cell.content.value.Value
 
 class FormulaContent(

@@ -48,10 +48,7 @@ class UserInterface : TextBasedUserInterface {
     private fun processOption(option: String) {
         when (option) {
             OPTION_1 -> {
-                //TODO
-                val path = "../../Desktop/rf.txt"
-               //readCommandFromFile(userInput[1])
-                readCommandFromFile(path)
+               readCommandFromFile(userInput[1])
             }
             OPTION_2 -> {
                 createSpreadsheet()
@@ -139,10 +136,6 @@ class UserInterface : TextBasedUserInterface {
                 }
                 println("**************************$COLOR_ORIGINAL\n")
             }
-
         }
-
-
-
     }
 }
